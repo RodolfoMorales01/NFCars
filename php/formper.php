@@ -1,0 +1,34 @@
+<?php
+include "conexion.php";
+$consulta="SELECT * FROM personal";
+$datos = $conn->query($consulta);
+?>
+<?php if(mysqli_num_rows($datos)>0): ?>	
+<?php while ($row=$datos->fetch_array()): ?>
+  <script>
+$('#delper<?php echo $row["id"]; ?>').click(function(e){
+	     window.location="php/delper.php?id=<?php echo $row['id']?>";
+});
+</script>
+<div  class="modal fade" id="modper<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div  class="modal-dialog" style="width: 300px;height: 300px;">
+   <div style="background-color: #333;" class="modal-content">
+     <div  class="modal-header">
+       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+       <h2 class="modal-title">Editar</h2>
+     </div>
+     <div class="modal-body">
+       <form role="form" method="post" enctype="multipart/form-data" action="php/editper.php">
+        <label for="Usuario" class="sr-only" vales>Nombre:</label>
+        <input type="hidden" id="id" name="id" class="form-control" value="<?php echo $row['id']; ?>" required>
+        <input type="texto" id="name" name="name" class="form-control" placeholder="Nombre" value="<?php echo $row['nombre']; ?>" required><br>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Editar</button>
+      </form>
+     </div>
+   </div>
+ </div>
+</div>
+<?php endwhile;?>
+<?php else:?>
+<?php endif;?>

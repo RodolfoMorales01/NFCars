@@ -1,0 +1,31 @@
+<?php
+	if(!empty($_POST)){
+	include 'conexion.php';
+   //$formatos  = array('.jpg','.jpeg','.ico','.png');
+  //$nombreArchivo= $_FILES['archivo']['name'];
+  //$nombreTmpArchivo= $_FILES['archivo']['tmp_name'];
+	$cta = mysqli_real_escape_string($conn, $_POST['cta']);
+	$name = mysqli_real_escape_string($conn, $_POST['name']);
+	$vei = mysqli_real_escape_string($conn, $_POST['vei']);
+	$pla = mysqli_real_escape_string($conn, $_POST['pla']);
+	$ocu = mysqli_real_escape_string($conn, $_POST['ocu']);   
+	$mot = mysqli_real_escape_string($conn, $_POST['mot']);   
+	//$ext=substr($nombreArchivo,strrpos($nombreArchivo, '.'));    	
+	$sqlchec="SELECT * FROM registro WHERE cuenta='".$cta."'";
+	$result = $conn->query($sqlchec);
+	if(mysqli_num_rows($result) > 0) {}else{
+  $alterar =mysqli_query($conn, "INSERT INTO registro(cuenta,nombre,veiculo,placas,ocupacion) VALUES ('$cta','$name','$vei','$pla','$ocu')")or die (mysqli_error($conn));}
+	$sqlchecin="SELECT * FROM registro WHERE cuenta='".$cta."'";
+	$result = $conn->query($sqlchec);
+	$row2=$result->fetch_array();
+		$sql3="SELECT * FROM guardias WHERE id=(SELECT MAX(id)  FROM guardias WHERE 1) ";
+		$res3 = $conn->query($sql3);
+		$row3=$res3->fetch_array();
+		$sql4="SELECT * FROM personal WHERE UID='".$row3['UID']."'";
+		$res4 = $conn->query($sql4);
+		$row4=$res4->fetch_array();		
+		if($mot==null) {$mot=$row2['ocupacion']}
+		$sql='INSERT INTO historial(usuario,guardia,motivo,acp) VALUES ("'.$row2['id'].'","'.$row4['id'].'","'.$mot.'",1)';$result = $conn->query($sql);
+	echo '<script>window.location="../agregar.php"</script>';
+	 }else{echo '<script>window.location="../agregar.php"</script>';}
+  ?>
